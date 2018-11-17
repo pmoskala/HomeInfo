@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using HomeInfo.Application.Interfaces;
+﻿using HomeInfo.Application.Interfaces;
 using HomeInfo.Application.Notifications;
 using HomeInfo.Domain.Entities;
 using MediatR;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace HomeInfo.Application.Users.Commands.CreateUser
 {
@@ -22,7 +20,7 @@ namespace HomeInfo.Application.Users.Commands.CreateUser
 
         public async Task<Unit> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            var entity = new User
+            User entity = new User
             {
                 Id = Guid.NewGuid(),
                 Email = request.Email,
@@ -31,7 +29,7 @@ namespace HomeInfo.Application.Users.Commands.CreateUser
                 Surname = request.Surname
             };
             await Task.Delay(1000, cancellationToken);
-            await _notificationService.SendAsync(new Message {Body = "aa", From = "bb", Subject = "cc", To = "dd"});
+            await _notificationService.SendAsync(new Message { Body = "aa", From = "bb", Subject = "cc", To = "dd" });
 
             return Unit.Value;
         }

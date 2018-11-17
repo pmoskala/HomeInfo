@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using HomeInfo.Application.Users.Commands.CreateUser;
-using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HomeInfo.Server.Controllers
 {
     [Route("api")]
+    [Authorize]
     public class UsersController : BaseController
     {
         [HttpPost("users")]
