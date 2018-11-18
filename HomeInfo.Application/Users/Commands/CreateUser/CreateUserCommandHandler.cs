@@ -1,37 +1,31 @@
 ﻿using HomeInfo.Application.Interfaces;
-using HomeInfo.Application.Notifications;
 using HomeInfo.Domain.Entities;
 using MediatR;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace HomeInfo.Application.Users.Commands.CreateUser
 {
-    public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Unit>
+    public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, User>
     {
 
         private readonly INotificationService _notificationService;
+        private readonly IUserRepository _userRepository;
 
-        public CreateUserCommandHandler(INotificationService notificationService)
+        public CreateUserCommandHandler(INotificationService notificationService, IUserRepository userRepository)
         {
             _notificationService = notificationService;
+            _userRepository = userRepository;
         }
 
-        public async Task<Unit> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+        public async Task<User> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            User entity = new User
-            {
-                Id = Guid.NewGuid(),
-                Email = request.Email,
-                UserName = request.UserName,
-                Name = request.UserName,
-                Surname = request.Surname
-            };
-            await Task.Delay(1000, cancellationToken);
-            await _notificationService.SendAsync(new Message { Body = "aa", From = "bb", Subject = "cc", To = "dd" });
+            User entity = _userRepository.AddUser(request.UserName, request.Name, request.Surname, request.Email);
 
-            return Unit.Value;
+            await Task.Delay(200, cancellationToken);
+            // await _notificationService.SendAsync(request);
+
+            return entity;
         }
     }
 }

@@ -1,8 +1,8 @@
-﻿using System.Diagnostics;
+﻿using MediatR;
+using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
-using Microsoft.Extensions.Logging;
 
 namespace HomeInfo.Application.Infrastructure
 {
@@ -21,12 +21,12 @@ namespace HomeInfo.Application.Infrastructure
         {
             _timer.Start();
 
-            var response = await next();
+            TResponse response = await next();
 
             _timer.Stop();
 
             if (_timer.ElapsedMilliseconds <= 500) return response;
-            var name = typeof(TRequest).Name;
+            string name = typeof(TRequest).Name;
 
             // TODO: Add User Details
 

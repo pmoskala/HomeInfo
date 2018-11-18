@@ -1,13 +1,14 @@
-﻿using System.Threading.Tasks;
-using HomeInfo.Application.Interfaces;
-using HomeInfo.Application.Notifications;
+﻿using HomeInfo.Application.Interfaces;
+using MediatR;
+using System.Threading.Tasks;
 
 namespace HomeInfo.Infrastructure
 {
     public class NotificationService : INotificationService
     {
-        public Task SendAsync(Message message)
+        public Task SendAsync(IRequest message)
         {
+            IRequest a = message;
             return Task.CompletedTask;
         }
     }

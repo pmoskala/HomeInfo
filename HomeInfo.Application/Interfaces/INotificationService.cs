@@ -1,10 +1,10 @@
-﻿using System.Threading.Tasks;
-using HomeInfo.Application.Notifications;
+﻿using MediatR;
+using System.Threading.Tasks;
 
 namespace HomeInfo.Application.Interfaces
 {
     public interface INotificationService
     {
-        Task SendAsync(Message message);
+        Task SendAsync(IRequest message);
     }
 }

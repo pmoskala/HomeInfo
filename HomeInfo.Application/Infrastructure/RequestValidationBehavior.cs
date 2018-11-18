@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using FluentValidation;
+using FluentValidation.Results;
+using MediatR;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentValidation;
-using MediatR;
 
 namespace HomeInfo.Application.Infrastructure
 {
@@ -17,11 +18,11 @@ namespace HomeInfo.Application.Infrastructure
             _validators = validators;
         }
 
-        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            var context = new ValidationContext(request);
+            ValidationContext context = new ValidationContext(request);
 
-            var failures = _validators
+            List<ValidationFailure> failures = _validators
                 .Select(v => v.Validate(context))
                 .SelectMany(result => result.Errors)
                 .Where(f => f != null)
@@ -32,7 +33,7 @@ namespace HomeInfo.Application.Infrastructure
                 throw new Exceptions.ValidationException(failures);
             }
 
-            return next();
+            return await next();
         }
     }
 }
