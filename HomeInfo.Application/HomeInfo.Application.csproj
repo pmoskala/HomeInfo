@@ -5,12 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Users\Queries\**" />
-    <EmbeddedResource Remove="Users\Queries\**" />
-    <None Remove="Users\Queries\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\HomeInfo.Domain\HomeInfo.Domain.csproj" />
   </ItemGroup>
 
