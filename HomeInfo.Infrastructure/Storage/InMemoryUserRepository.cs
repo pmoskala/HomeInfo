@@ -6,12 +6,22 @@ namespace HomeInfo.Infrastructure.Storage
 {
     public class InMemoryUserRepository : IUserRepository
     {
-        private static readonly IList<User> Users = new List<User>();
+        private static readonly IList<User> _users = new List<User>();
         public User AddUser(string userName, string name, string surname, string email)
         {
             User user = new User(userName, name, surname, email);
-            Users.Add(user);
+            _users.Add(user);
             return user;
+        }
+
+        public IList<User> GetUsers()
+        {
+            return _users;
+        }
+
+        public void Clear()
+        {
+            _users.Clear();
         }
     }
 }

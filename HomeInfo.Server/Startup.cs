@@ -41,6 +41,8 @@ namespace HomeInfo.Server
             services.AddSingleton<IEventStorage, InMemoryEventStorage>();
             services.AddSingleton<IUserRepository, InMemoryUserRepository>();
 
+            services.AddLogging();
+
             services.AddMvc()
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateUserCommandValidator>())
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
