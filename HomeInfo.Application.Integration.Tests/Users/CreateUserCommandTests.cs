@@ -3,22 +3,15 @@ using HomeInfo.Application.Exceptions;
 using HomeInfo.Application.Interfaces;
 using HomeInfo.Application.Users.Commands.CreateUser;
 using HomeInfo.Domain.Entities;
-using NUnit.Framework;
+using System;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace HomeInfo.Application.Integration.Tests.Users
 {
-    [TestFixture]
-    public class CreateUserCommandTests : TestBase
+    public class CreateUserCommandTests : TestBase, IDisposable
     {
-        [SetUp]
-        public void BeforeAll()
-        {
-            IUserRepository userRepository = Provider.GetService(typeof(IUserRepository)) as IUserRepository;
-            userRepository?.Clear();
-        }
-
-        [Test]
+        [Fact]
         public async Task CreateUserCommand_ShouldAddUser()
         {
             //Arrange
@@ -41,7 +34,7 @@ namespace HomeInfo.Application.Integration.Tests.Users
             userRepository.GetUsers().Should().Contain(response);
         }
 
-        [Test]
+        [Fact]
         public async Task CreateUserCommand_ShouldAddTwoUsers()
         {
             //Arrange
@@ -77,7 +70,7 @@ namespace HomeInfo.Application.Integration.Tests.Users
             userRepository.GetUsers().Should().Contain(response2);
         }
 
-        [Test]
+        [Fact]
         public async Task CreateUserCommand_AddUser_ShouldThrowEmailValidationException()
         {
             //Arrange
@@ -90,14 +83,14 @@ namespace HomeInfo.Application.Integration.Tests.Users
             };
 
             //Act
-            ValidationException exception = Assert.CatchAsync<ValidationException>(async () => await SendAsync(command));
+            ValidationException exception = await Assert.ThrowsAsync<ValidationException>(async () => await SendAsync(command));
 
             //Assert
             exception.Failures.Keys.Should().Contain("Email");
             exception.Failures.Count.Should().Be(1);
         }
 
-        [Test]
+        [Fact]
         public async Task CreateUserCommand_AddUser_ShouldThrowUserNameValidationException()
         {
             //Arrange
@@ -110,14 +103,14 @@ namespace HomeInfo.Application.Integration.Tests.Users
             };
 
             //Act
-            ValidationException exception = Assert.CatchAsync<ValidationException>(async () => await SendAsync(command));
+            ValidationException exception = await Assert.ThrowsAsync<ValidationException>(async () => await SendAsync(command));
 
             //Assert
             exception.Failures.Keys.Should().Contain("UserName");
             exception.Failures.Count.Should().Be(1);
         }
 
-        [Test]
+        [Fact]
         public async Task CreateUserCommand_AddUser_ShouldThrowMultipleValidationExceptions()
         {
             //Arrange
@@ -130,7 +123,7 @@ namespace HomeInfo.Application.Integration.Tests.Users
             };
 
             //Act
-            ValidationException exception = Assert.CatchAsync<ValidationException>(async () => await SendAsync(command));
+            ValidationException exception = await Assert.ThrowsAsync<ValidationException>(async () => await SendAsync(command));
 
             //Assert
             exception.Failures.Keys.Should().Contain("Name");
@@ -138,6 +131,12 @@ namespace HomeInfo.Application.Integration.Tests.Users
             exception.Failures.Keys.Should().Contain("Email");
             exception.Failures.Keys.Should().Contain("UserName");
             exception.Failures.Count.Should().Be(4);
+        }
+
+        public void Dispose()
+        {
+            IUserRepository userRepository = Provider.GetService(typeof(IUserRepository)) as IUserRepository;
+            userRepository?.Clear();
         }
     }
 }
